@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lý Thuyết Mã Hóa - Từ Cổ Điển Đến Hiện Đại</title>
+    <link rel="stylesheet" href="menu-style.css">
+    <link rel="stylesheet" href="Lythuyet.css">
+</head>
+<body>
+    <a href="menu.html" class="menu-btn">MENU</a>
+    <div class="container content-wrapper">
+        <h1>Lý Thuyết Mã Hóa: Từ Cổ Điển Đến Hiện Đại</h1>
+        
+        <div class="toc">
+            <h2>Mục Lục</h2>
+            <ul>
+                <li><a href="#classical">I. Mã Hóa Cổ Điển</a></li>
+                <li><a href="#symmetric">II. Mã Hóa Đối Xứng Hiện Đại</a></li>
+                <li><a href="#asymmetric">III. Mã Hóa Bất Đối Xứng</a></li>
+                <li><a href="#hash">IV. Hàm Hash</a></li>
+            </ul>
+        </div>
+
+        <!-- PHẦN I: MÃ HÓA CỔ ĐIỂN -->
+        <section id="classical" class="theory-section">
+            <h2>I. Mã Hóa Cổ Điển</h2>
+            <p>Mã hóa cổ điển là những phương pháp mã hóa được sử dụng từ thời cổ đại cho đến trước khi có máy tính. Chúng thường dựa trên các phép biến đổi đơn giản trên ký tự.</p>
+
+            <!-- 1. CAESAR CIPHER -->
+            <div class="subsection">
+                <h3>1. Mã Hóa Caesar (Caesar Cipher)</h3>
+                <p><strong>Khái Niệm:</strong> Caesar Cipher (hay còn gọi là Shift Cipher) là một phương pháp thay thế đơn giản, mỗi ký tự được dịch chuyển một số vị trí cố định trong bảng chữ cái.</p>
+                <p><strong>Công Thức:</strong> <code>C = (P + K) mod 26</code></p>
+                <ul>
+                    <li>P: Vị trí của ký tự gốc (0-25)</li>
+                    <li>K: Khóa (số lần dịch chuyển)</li>
+                    <li>C: Vị trí của ký tự được mã hóa</li>
+                </ul>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <p>Khóa: K = 3</p>
+                    <p>Văn bản gốc: "HELLO"</p>
+                    <table border="1" cellpadding="5">
+                        <tr>
+                            <th>Ký tự</th>
+                            <th>H</th>
+                            <th>E</th>
+                            <th>L</th>
+                            <th>L</th>
+                            <th>O</th>
+                        </tr>
+                        <tr>
+                            <th>Vị trí</th>
+                            <td>7</td>
+                            <td>4</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>14</td>
+                        </tr>
+                        <tr>
+                            <th>+3</th>
+                            <td>10</td>
+                            <td>7</td>
+                            <td>14</td>
+                            <td>14</td>
+                            <td>17</td>
+                        </tr>
+                        <tr>
+                            <th>Ký tự mã</th>
+                            <td>K</td>
+                            <td>H</td>
+                            <td>O</td>
+                            <td>O</td>
+                            <td>R</td>
+                        </tr>
+                    </table>
+                    <p>Văn bản mã hóa: "KHOOR"</p>
+                </div>
+                <p><strong>Ưu & Nhược Điểm:</strong></p>
+                <ul>
+                    <li>✓ Đơn giản, dễ hiểu</li>
+                    <li>✗ Rất dễ bị phá (chỉ có 26 khóa có thể)</li>
+                    <li>✗ Không an toàn cho dữ liệu thực tế</li>
+                </ul>
+            </div>
+
+            <!-- 2. SUBSTITUTION CIPHER -->
+            <div class="subsection">
+                <h3>2. Mã Hóa Thay Thế (Substitution Cipher)</h3>
+                <p><strong>Khái Niệm:</strong> Mở rộng của Caesar Cipher, mỗi ký tự được thay thế bằng một ký tự khác theo một bảng ánh xạ cố định.</p>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <p>Bảng ánh xạ:</p>
+                    <table border="1" cellpadding="3">
+                        <tr>
+                            <td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td>
+                            <td>...</td><td>Z</td>
+                        </tr>
+                        <tr>
+                            <td>Q</td><td>W</td><td>E</td><td>R</td><td>T</td><td>Y</td>
+                            <td>...</td><td>M</td>
+                        </tr>
+                    </table>
+                    <p>Văn bản gốc: "HELLO WORLD"</p>
+                    <p>Văn bản mã hóa: "ITSSG VGKSR"</p>
+                </div>
+                <p><strong>Ưu & Nhược Điểm:</strong></p>
+                <ul>
+                    <li>✓ Khóa không gian lớn hơn (26! ≈ 4 × 10²⁶)</li>
+                    <li>✗ Dễ bị phá bằng phân tích tần suất ký tự</li>
+                    <li>✗ Không an toàn cho dữ liệu hiện đại</li>
+                </ul>
+            </div>
+
+            <!-- 3. VIGENERE CIPHER -->
+            <div class="subsection">
+                <h3>3. Mã Hóa Vigenere (Vigenere Cipher)</h3>
+                <p><strong>Khái Niệm:</strong> Cải tiến Caesar Cipher bằng cách sử dụng khóa lặp lại để dịch chuyển mỗi ký tự một lượng khác nhau.</p>
+                <p><strong>Công Thức:</strong> <code>C = (P + K) mod 26</code> (K lặp lại)</p>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <p>Văn bản gốc: "ATTACKATDAWN"</p>
+                    <p>Khóa: "KEY" (lặp lại: "KEYKEYKEYKEYKEY")</p>
+                    <table border="1" cellpadding="3">
+                        <tr>
+                            <th>Văn bản</th>
+                            <td>A</td><td>T</td><td>T</td><td>A</td><td>C</td><td>K</td>
+                            <td>A</td><td>T</td><td>D</td><td>A</td><td>W</td><td>N</td>
+                        </tr>
+                        <tr>
+                            <th>Khóa</th>
+                            <td>K</td><td>E</td><td>Y</td><td>K</td><td>E</td><td>Y</td>
+                            <td>K</td><td>E</td><td>Y</td><td>K</td><td>E</td><td>Y</td>
+                        </tr>
+                        <tr>
+                            <th>Bản mã</th>
+                            <td>K</td><td>X</td><td>S</td><td>K</td><td>G</td><td>I</td>
+                            <td>K</td><td>X</td><td>W</td><td>K</td><td>A</td><td>L</td>
+                        </tr>
+                    </table>
+                    <p>Văn bản mã hóa: "KXSKGIKXWKAL"</p>
+                </div>
+                <p><strong>Ưu & Nhược Điểm:</strong></p>
+                <ul>
+                    <li>✓ Kháng lại phân tích tần suất tốt hơn</li>
+                    <li>✓ Khóa có thể dài tùy ý</li>
+                    <li>✗ Có thể bị phá bằng Kasiski examination hoặc Index of Coincidence</li>
+                </ul>
+            </div>
+
+            <!-- 4. AFFINE CIPHER -->
+            <div class="subsection">
+                <h3>4. Mã Hóa Affine (Affine Cipher)</h3>
+                <p><strong>Khái Niệm:</strong> Sử dụng hàm affine để mã hóa, kết hợp phép nhân và phép cộng.</p>
+                <p><strong>Công Thức:</strong> <code>C = (a*P + b) mod 26</code></p>
+                <ul>
+                    <li>a và b là các khóa (a phải nguyên tố cùng nhau với 26)</li>
+                    <li>a thường là 5, 7, 9, 11, 15, 17, 19, 21, 23, 25</li>
+                </ul>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <p>Khóa: a = 5, b = 8</p>
+                    <p>Văn bản gốc: "HELLO"</p>
+                    <table border="1" cellpadding="3">
+                        <tr>
+                            <th>Ký tự</th>
+                            <td>H</td><td>E</td><td>L</td><td>L</td><td>O</td>
+                        </tr>
+                        <tr>
+                            <th>Vị trí (P)</th>
+                            <td>7</td><td>4</td><td>11</td><td>11</td><td>14</td>
+                        </tr>
+                        <tr>
+                            <th>5P + 8</th>
+                            <td>43</td><td>28</td><td>63</td><td>63</td><td>78</td>
+                        </tr>
+                        <tr>
+                            <th>mod 26</th>
+                            <td>17</td><td>2</td><td>11</td><td>11</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th>Ký tự mã</th>
+                            <td>R</td><td>C</td><td>L</td><td>L</td><td>A</td>
+                        </tr>
+                    </table>
+                    <p>Văn bản mã hóa: "RCLŁA"</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN II: MÃ HÓA ĐỐI XỨNG HIỆN ĐẠI -->
+        <section id="symmetric" class="theory-section">
+            <h2>II. Mã Hóa Đối Xứng Hiện Đại (Symmetric Key Encryption)</h2>
+            <p>Mã hóa đối xứng sử dụng cùng một khóa để mã hóa và giải mã dữ liệu. Chúng an toàn hơn mã hóa cổ điển và được sử dụng rộng rãi trong thực tế.</p>
+
+            <div class="subsection" style="background-color: #fff3e0; border-left: 4px solid #ff9800;">
+                <h3>Cách Thức Hoạt Động (How It Works)</h3>
+                <p><strong>Quy trình chung của mã hóa đối xứng:</strong></p>
+                <ol>
+                    <li><strong>Chia nhỏ dữ liệu:</strong> Văn bản cần mã hóa được chia thành các khối có kích thước cố định (thường 64-bit hoặc 128-bit)</li>
+                    <li><strong>Tạo khóa:</strong> Sinh ra khóa bí mật từ password hoặc khóa ngẫu nhiên</li>
+                    <li><strong>Mã hóa từng khối:</strong> Áp dụng các phép biến đổi toán học lặp lại nhiều lần (rounds):
+                        <ul>
+                            <li><strong>Substitution (Thay thế):</strong> Thay thế giá trị bit bằng giá trị khác dựa trên S-box</li>
+                            <li><strong>Transposition (Hoán vị):</strong> Thay đổi vị trí các bit theo quy tắc xác định</li>
+                            <li><strong>XOR với khóa:</strong> Thực hiện phép XOR giữa dữ liệu và khóa con</li>
+                            <li><strong>Trộn cột (Mixing):</strong> Kết hợp dữ liệu để tăng độ phức tạp</li>
+                        </ul>
+                    </li>
+                    <li><strong>Lặp lại:</strong> Quy trình trên được lặp 10-16 lần (tùy thuật toán)</li>
+                    <li><strong>Kết hợp khối:</strong> Nếu văn bản dài hơn 1 khối, sử dụng chế độ hoạt động (ECB, CBC, CTR, GCM...) để kết hợp các khối mã hóa</li>
+                    <li><strong>Xuất bản mã:</strong> Kết quả là văn bản mã hóa có cùng kích thước với văn bản gốc</li>
+                </ol>
+                <p><strong>Đặc điểm:</strong></p>
+                <ul>
+                    <li>🔑 Khóa mã hóa = Khóa giải mã</li>
+                    <li>⚡ Tốc độ cao (thích hợp cho lượng dữ liệu lớn)</li>
+                    <li>🔒 Độ an toàn phụ thuộc vào khóa và số lần lặp</li>
+                    <li>📦 Phù hợp cho: Mã hóa file, database, thông tin nhạy cảm</li>
+                </ul>
+            </div>
+
+            <!-- 1. DES -->
+            <div class="subsection">
+                <h3>1. DES (Data Encryption Standard)</h3>
+                <p><strong>Khái Niệm:</strong> Tiêu chuẩn mã hóa dữ liệu được công bố năm 1977, sử dụng khóa 56-bit, xử lý khối dữ liệu 64-bit.</p>
+                <p><strong>Đặc Điểm:</strong></p>
+                <ul>
+                    <li>Sử dụng 16 vòng (rounds) xử lý</li>
+                    <li>Combines substitution và transposition (S-box và P-box)</li>
+                    <li>Mã hóa khối (block cipher)</li>
+                </ul>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <p>Khóa: 56-bit (ví dụ: 0x0123456789ABCDEF)</p>
+                    <p>Văn bản gốc: "HELLO!!!" (64-bit)</p>
+                    <p>Quá trình: Thực hiện Initial Permutation → 16 vòng → Final Permutation</p>
+                    <p>Văn bản mã hóa: (64-bit ciphertext)</p>
+                </div>
+                <p><strong>Tình Trạng:</strong></p>
+                <ul>
+                    <li>⚠️ Không dùng cho dữ liệu mới (khóa quá ngắn)</li>
+                    <li>3DES vẫn còn được sử dụng (sử dụng 3 lần DES)</li>
+                </ul>
+            </div>
+
+            <!-- 2. AES -->
+            <div class="subsection">
+                <h3>2. AES (Advanced Encryption Standard)</h3>
+                <p><strong>Khái Niệm:</strong> Tiêu chuẩn mã hóa hiện tại, được chấp nhận năm 2001, có khóa 128/192/256-bit, xử lý khối 128-bit với 10/12/14 vòng.</p>
+                <p><strong>Đặc Điểm:</strong></p>
+                <ul>
+                    <li>Thuật toán Rijndael được chọn làm AES</li>
+                    <li>4 phép toán chính: SubBytes, ShiftRows, MixColumns, AddRoundKey</li>
+                    <li>Rất an toàn, được sử dụng rộng rãi</li>
+                </ul>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <p><strong>AES-128 (Khóa 128-bit):</strong></p>
+                    <p>Khóa: "0123456789ABCDEF" (16 byte)</p>
+                    <p>Văn bản gốc: "Secret Message!!" (16 byte)</p>
+                    <p>Tuyệt chiêu:</p>
+                    <ol>
+                        <li>Chia dữ liệu thành khối 128-bit</li>
+                        <li>Thực hiện AddRoundKey с khóa ban đầu</li>
+                        <li>Lặp 9 lần: SubBytes → ShiftRows → MixColumns → AddRoundKey</li>
+                        <li>Lần cuối: SubBytes → ShiftRows → AddRoundKey (không MixColumns)</li>
+                    </ol>
+                    <p>Văn bản mã hóa: 16 byte sẽ hoàn toàn khác</p>
+                </div>
+                <p><strong>Các chế độ hoạt động (Modes of Operation):</strong></p>
+                <ul>
+                    <li><strong>ECB (Electronic CodeBook)</strong>: Mã hóa từng khối riêng lẻ (không an toàn)</li>
+                    <li><strong>CBC (Cipher Block Chaining)</strong>: Khối được XOR với khối mã hóa trước đó</li>
+                    <li><strong>CTR (Counter)</strong>: Sử dụng bộ đếm, an toàn và hiệu quả</li>
+                    <li><strong>GCM (Galois/Counter Mode)</strong>: Cung cấp xác thực</li>
+                </ul>
+                <p><strong>Tình Trạng:</strong></p>
+                <ul>
+                    <li>✓ Được khuyến nghị sử dụng cho dữ liệu mới</li>
+                    <li>✓ An toàn cho các ứng dụng thương mại</li>
+                </ul>
+            </div>
+
+            <!-- 3. 3DES -->
+            <div class="subsection">
+                <h3>3. 3DES (Triple DES)</h3>
+                <p><strong>Khái Niệm:</strong> Áp dụng DES ba lần liên tiếp với hai hoặc ba khóa khác nhau để tăng độ an toàn.</p>
+                <p><strong>Công Thức:</strong> <code>C = DES(K3, DES⁻¹(K2, DES(K1, P)))</code></p>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <p>K1, K2, K3: 3 khóa 56-bit</p>
+                    <p>Văn bản gốc: "HELLO!!!"</p>
+                    <p>Quá trình: 
+                        <br/>1. Mã hóa với K1
+                        <br/>2. Giải mã với K2 (không phải giải mã thực sự)
+                        <br/>3. Mã hóa với K3
+                    </p>
+                    <p>Văn bản mã hóa: (64-bit ciphertext)</p>
+                </div>
+                <p><strong>Tình Trạng:</strong></p>
+                <ul>
+                    <li>⚠️ Vẫn còn được sử dụng trong các hệ thống legacy</li>
+                    <li>Đang dần được thay thế bằng AES</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PHẦN III: MÃ HÓA BẤT ĐỐI XỨNG -->
+        <section id="asymmetric" class="theory-section">
+            <h2>III. Mã Hóa Bất Đối Xứng (Asymmetric Key Encryption)</h2>
+            <p>Mã hóa bất đối xứng sử dụng hai khóa khác nhau: khóa công khai (public key) để mã hóa và khóa riêng (private key) để giải mã. Giải quyết bài toán phân phối khóa.</p>
+
+            <div class="subsection" style="background-color: #f3e5f5; border-left: 4px solid #9c27b0;">
+                <h3>Cách Thức Hoạt Động (How It Works)</h3>
+                <p><strong>Quy trình chung của mã hóa bất đối xứng:</strong></p>
+                <ol>
+                    <li><strong>Sinh cặp khóa:</strong>
+                        <ul>
+                            <li>Sử dụng một bài toán toán học trên đơn chiều (hard to reverse)</li>
+                            <li>RSA: Dựa trên khó khăn của việc phân tích số lớn thành thừa số nguyên tố</li>
+                            <li>ECC: Dựa trên bài toán logarit rời rạc trên đường cong elliptic</li>
+                            <li>Tạo ra 2 khóa có liên hệ toán học: Public Key (công khai) và Private Key (bí mật)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Phân phối khóa công khai:</strong> Khóa công khai được chia sẻ rộng rãi, không cần bảo mật</li>
+                    <li><strong>Mã hóa dữ liệu:</strong>
+                        <ul>
+                            <li>Người gửi dùng <strong>khóa công khai của người nhận</strong> để mã hóa dữ liệu</li>
+                            <li>C = M^e mod n (RSA), hoặc phép toán tương ứng trên ECC</li>
+                        </ul>
+                    </li>
+                    <li><strong>Gửi dữ liệu mã hóa:</strong> Gửi văn bản mã hóa qua kênh công cộng (không an toàn)</li>
+                    <li><strong>Giải mã:</strong>
+                        <ul>
+                            <li>Chỉ người có <strong>khóa riêng tương ứng</strong> mới giải mã được</li>
+                            <li>M = C^d mod n (RSA), hoặc phép toán tương ứng trên ECC</li>
+                        </ul>
+                    </li>
+                    <li><strong>Xác thực (Digital Signature):</strong> Đảo ngược quy trình - mã hóa với khóa riêng, kiểm tra với khóa công khai</li>
+                </ol>
+                <p><strong>Đặc điểm:</strong></p>
+                <ul>
+                    <li>🔑 Khóa mã hóa ≠ Khóa giải mã</li>
+                    <li>⚡ Tốc độ chậm (không phù hợp cho dữ liệu lớn)</li>
+                    <li>🔒 Không cần trao đổi khóa qua kênh an toàn</li>
+                    <li>✍️ Cho phép chữ ký số và xác thực</li>
+                    <li>📦 Phù hợp cho: Trao đổi khóa, chữ ký, xác thực</li>
+                </ul>
+            </div>
+
+            <!-- 1. RSA -->
+            <div class="subsection">
+                <h3>1. RSA (Rivest-Shamir-Adleman)</h3>
+                <p><strong>Khái Niệm:</strong> Thuật toán mã hóa công khai đầu tiên, dựa trên bài toán phân tích thành thừa số nguyên tố lớn.</p>
+                <p><strong>Các Bước:</strong></p>
+                <ol>
+                    <li><strong>Sinh khóa:</strong>
+                        <ul>
+                            <li>Chọn hai số nguyên tố lớn p và q</li>
+                            <li>Tính n = p × q</li>
+                            <li>Tính φ(n) = (p-1)(q-1)</li>
+                            <li>Chọn e (1 < e < φ(n)), gcd(e, φ(n)) = 1</li>
+                            <li>Tính d sao cho e×d ≡ 1 (mod φ(n))</li>
+                            <li>Khóa công khai: (e, n), Khóa riêng: (d, n)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Mã hóa:</strong> C = M^e mod n</li>
+                    <li><strong>Giải mã:</strong> M = C^d mod n</li>
+                </ol>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <p><strong>Ví dụ nhỏ (để minh họa, không an toàn):</strong></p>
+                    <p>p = 61, q = 53</p>
+                    <p>n = 61 × 53 = 3233</p>
+                    <p>φ(n) = 60 × 52 = 3120</p>
+                    <p>e = 17 (gcd(17, 3120) = 1)</p>
+                    <p>d = 2753 (vì 17 × 2753 ≡ 1 (mod 3120))</p>
+                    <p>Khóa công khai: (17, 3233)</p>
+                    <p>Khóa riêng: (2753, 3233)</p>
+                    <p><strong>Mã hóa:</strong> M = 65 (ký tự 'A')</p>
+                    <p>C = 65^17 mod 3233 = 2790</p>
+                    <p><strong>Giải mã:</strong> M = 2790^2753 mod 3233 = 65 ✓</p>
+                </div>
+                <p><strong>Ứng Dụng:</strong></p>
+                <ul>
+                    <li>Trao đổi khóa</li>
+                    <li>Chữ ký số</li>
+                    <li>Xác thực</li>
+                </ul>
+                <p><strong>Tình Trạng:</strong></p>
+                <ul>
+                    <li>✓ Vẫn được sử dụng rộng rãi (RSA-2048, RSA-4096)</li>
+                    <li>⚠️ Khóa phải đủ dài (ít nhất 2048-bit)</li>
+                </ul>
+            </div>
+
+            <!-- 2. ECC -->
+            <div class="subsection">
+                <h3>2. ECC (Elliptic Curve Cryptography)</h3>
+                <p><strong>Khái Niệm:</strong> Sử dụng tính chất của đường cong elliptic trên trường hữu hạn để thực hiện mã hóa công khai với khóa ngắn hơn RSA.</p>
+                <p><strong>Đặc Điểm:</strong></p>
+                <ul>
+                    <li>Đường cong elliptic: y² = x³ + ax + b</li>
+                    <li>Độ an toàn tương đương RSA nhưng khóa ngắn hơn</li>
+                    <li>ECC-256 ≈ RSA-3072 về độ an toàn</li>
+                </ul>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <p>Đường cong: y² = x³ + 2x + 2 (mod 17)</p>
+                    <p>Điểm cơ bản: G = (5, 1)</p>
+                    <p>Khóa riêng: d = 5</p>
+                    <p>Khóa công khai: Q = 5×G = (6, 3)</p>
+                    <p><strong>Mã hóa:</strong> Sử dụng ECC để trao đổi khóa Diffie-Hellman</p>
+                </div>
+                <p><strong>Ứng Dụng:</strong></p>
+                <ul>
+                    <li>ECDSA (chữ ký số)</li>
+                    <li>ECDH (trao đổi khóa)</li>
+                    <li>Bitcoin, các hệ thống blockchain</li>
+                </ul>
+                <p><strong>Tình Trạng:</strong></p>
+                <ul>
+                    <li>✓ Ngày càng được sử dụng nhiều</li>
+                    <li>✓ Hiệu quả hơn RSA, khóa gọn hơn</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PHẦN IV: HÀM HASH -->
+        <section id="hash" class="theory-section">
+            <h2>IV. Hàm Hash (Hash Functions)</h2>
+            <p>Hàm hash là một hàm một chiều (không thể đảo ngược) biến đổi dữ liệu bất kỳ thành một chuỗi có độ dài cố định.</p>
+
+            <div class="subsection" style="background-color: #e3f2fd; border-left: 4px solid #2196f3;">
+                <h3>Cách Thức Hoạt Động (How It Works)</h3>
+                <p><strong>Quy trình chung của hàm hash:</strong></p>
+                <ol>
+                    <li><strong>Đầu vào:</strong> Nhận dữ liệu bất kỳ có độ dài tùy ý (file, chuỗi ký tự, số...)</li>
+                    <li><strong>Chia nhỏ dữ liệu:</strong> Chia input thành các khối có kích thước cố định (block size)</li>
+                    <li><strong>Khởi tạo giá trị:</strong> Đặt một giá trị khởi tạo ban đầu (initialization vector - IV)</li>
+                    <li><strong>Xử lý lặp:</strong> Với mỗi khối:
+                        <ul>
+                            <li>Lấy output của bước trước</li>
+                            <li>Kết hợp (XOR, ADD) với khối hiện tại</li>
+                            <li>Thực hiện các phép biến đổi phức tạp (substitution, rotation, modular operations)</li>
+                            <li>Tạo output để dùng cho khối tiếp theo</li>
+                        </ul>
+                    </li>
+                    <li><strong>Padding:</strong> Nếu dữ liệu không chia hết cho block size, thêm padding (0 bits hoặc thông tin độ dài)</li>
+                    <li><strong>Finalization:</strong> Sau khi xử lý tất cả khối, thực hiện thêm một số phép biến đổi cuối cùng</li>
+                    <li><strong>Đầu ra (Hash/Digest):</strong> Kết quả là một giá trị (hash value) có độ dài cố định và không thể đảo ngược</li>
+                </ol>
+                <p><strong>Tính chất quan trọng của Hash Function:</strong></p>
+                <ul>
+                    <li>🔐 <strong>Tiền ảnh kháng (Pre-image Resistance):</strong> Cho hash value, không thể tìm được dữ liệu gốc</li>
+                    <li>🔐 <strong>Tiền ảnh thứ 2 kháng (Second Pre-image Resistance):</strong> Cho một dữ liệu, khó tìm dữ liệu khác có cùng hash</li>
+                    <li>🔐 <strong>Xung đột kháng (Collision Resistance):</strong> Khó tìm hai dữ liệu khác nhau có cùng hash</li>
+                    <li>⚡ <strong>Tốc độ:</strong> Tính toán nhanh chóng</li>
+                    <li>📊 <strong>Deterministic:</strong> Cùng dữ liệu → cùng hash (lặp lại được)</li>
+                    <li>🎲 <strong>Avalanche Effect:</strong> Thay đổi 1 bit input → thay đổi ~50% output</li>
+                </ul>
+                <p><strong>Ứng dụng của Hash:</strong></p>
+                <ul>
+                    <li>💾 Kiểm tra tính toàn vẹn (file integrity check)</li>
+                    <li>🔐 Lưu trữ mật khẩu (password storage) - dùng kèm salt</li>
+                    <li>✍️ Chữ ký số (digital signature)</li>
+                    <li>⛓️ Blockchain (Bitcoin sử dụng SHA-256)</li>
+                    <li>🔍 Tìm kiếm nhanh (hash table, hash map)</li>
+                </ul>
+            </div>
+
+            <!-- 1. MD5 -->
+            <div class="subsection">
+                <h3>1. MD5 (Message Digest 5)</h3>
+                <p><strong>Khái Niệm:</strong> Thuật toán hash tạo ra giá trị hash 128-bit (32 ký tự hex) từ dữ liệu bất kỳ.</p>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <table border="1" cellpadding="5" style="width: 100%;">
+                        <tr>
+                            <th>Dữ liệu đầu vào</th>
+                            <th>MD5 Hash</th>
+                        </tr>
+                        <tr>
+                            <td>"Hello"</td>
+                            <td>8b1a9953c4611296aaf7a3c4a6f0618d</td>
+                        </tr>
+                        <tr>
+                            <td>"Hello "</td>
+                            <td>334d016f755cd6dc58c53a86e183882f</td>
+                        </tr>
+                        <tr>
+                            <td>"password123"</td>
+                            <td>482c811da5d5b4bc6d497ffa98491e38</td>
+                        </tr>
+                    </table>
+                </div>
+                <p><strong>Tính Chất:</strong></p>
+                <ul>
+                    <li>Deterministic (đầu vào giống nhau → kết quả giống nhau)</li>
+                    <li>Nhanh chóng</li>
+                    <li>Tính chất ranh mạnh (avalanche effect)</li>
+                </ul>
+                <p><strong>Tình Trạng:</strong></p>
+                <ul>
+                    <li>⚠️ <strong>KHÔNG DÙNG</strong> cho bảo mật (đã có collision attacks)</li>
+                    <li>✓ Có thể dùng cho checksum (kiểm tra tính toàn vẹn)</li>
+                </ul>
+            </div>
+
+            <!-- 2. SHA -->
+            <div class="subsection">
+                <h3>2. SHA (Secure Hash Algorithm)</h3>
+                <p><strong>Khái Niệm:</strong> Họ các hàm hash an toàn của Cơ quan An ninh Quốc gia Mỹ (NSA).</p>
+                <p><strong>Các Phiên Bản:</strong></p>
+                <ul>
+                    <li><strong>SHA-1:</strong> 160-bit (40 ký tự hex) - <strong>⚠️ KHÔNG DÙNG</strong></li>
+                    <li><strong>SHA-256:</strong> 256-bit (64 ký tự hex) - ✓ Khuyến nghị</li>
+                    <li><strong>SHA-384:</strong> 384-bit (96 ký tự hex) - ✓ Khuyến nghị</li>
+                    <li><strong>SHA-512:</strong> 512-bit (128 ký tự hex) - ✓ Khuyến nghị</li>
+                </ul>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <table border="1" cellpadding="5" style="width: 100%;">
+                        <tr>
+                            <th>Dữ liệu</th>
+                            <th>SHA-256</th>
+                        </tr>
+                        <tr>
+                            <td>"Hello"</td>
+                            <td>185f8db32271fe25f561a6fc938b2e264306ec304eda518007d1764826381969</td>
+                        </tr>
+                        <tr>
+                            <td>"password123"</td>
+                            <td>482c811da5d5b4bc6d497ffa98491e38482c811da5d5b4bc6d497ffa98491e38</td>
+                        </tr>
+                    </table>
+                </div>
+                <p><strong>Ứng Dụng:</strong></p>
+                <ul>
+                    <li>Kiểm tra tính toàn vẹn tập tin</li>
+                    <li>Lưu trữ mật khẩu (với salt và hashing)</li>
+                    <li>Chữ ký số</li>
+                    <li>Blockchain (Bitcoin sử dụng SHA-256)</li>
+                </ul>
+                <p><strong>Tình Trạng:</strong></p>
+                <ul>
+                    <li>✓ SHA-256 khuyến nghị cho các ứng dụng mới</li>
+                </ul>
+            </div>
+
+            <!-- 3. BCRYPT -->
+            <div class="subsection">
+                <h3>3. BCRYPT (Blowfish Crypt)</h3>
+                <p><strong>Khái Niệm:</strong> Hàm lưu trữ mật khẩu an toàn, kết hợp Blowfish cipher với salt và cost factor.</p>
+                <p><strong>Đặc Điểm:</strong></p>
+                <ul>
+                    <li>Có thêm salt ngẫu nhiên (chống rainbow table)</li>
+                    <li>Có cost factor (tính toán chậm ý định, chống brute-force)</li>
+                    <li>Kết quả hash có độ dài 60 ký tự</li>
+                </ul>
+                <p><strong>Ví Dụ:</strong></p>
+                <div class="example">
+                    <p>Mật khẩu: "password123"</p>
+                    <p>Salt: $2a$10$3z7.keWR0qeiTWN/eK8rH</p>
+                    <p>Hash: $2a$10$3z7.keWR0qeiTWN/eK8rHuWpqT4cA4ov1n8P6Zh7L.jGIkQBRu4Ui</p>
+                    <p><strong>Che giấu:</strong> Mỗi lần hash cùng mật khẩu lại khác vì salt ngẫu nhiên</p>
+                </div>
+                <p><strong>Ứng Dụng:</strong></p>
+                <ul>
+                    <li>Lưu trữ mật khẩu người dùng</li>
+                    <li>Xác thực người dùng</li>
+                </ul>
+                <p><strong>Tình Trạng:</strong></p>
+                <ul>
+                    <li>✓ Khuyến nghị cho lưu trữ mật khẩu</li>
+                    <li>✓ Phổ biến trong các ứng dụng web</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- BẢNG SO SÁNH -->
+        <section class="theory-section">
+            <h2>Bảng So Sánh Các Thuật Toán</h2>
+            <table border="1" cellpadding="8" style="width: 100%; font-size: 14px;">
+                <tr style="background-color: #f0f0f0;">
+                    <th>Thuật Toán</th>
+                    <th>Loại</th>
+                    <th>Độ An Toàn</th>
+                    <th>Tốc Độ</th>
+                    <th>Khóa</th>
+                    <th>Trạng Thái</th>
+                </tr>
+                <tr>
+                    <td>Caesar</td>
+                    <td>Cổ điển</td>
+                    <td>Rất thấp</td>
+                    <td>Rất nhanh</td>
+                    <td>1 số</td>
+                    <td>⚠️ Lỗi thời</td>
+                </tr>
+                <tr>
+                    <td>Vigenere</td>
+                    <td>Cổ điển</td>
+                    <td>Thấp</td>
+                    <td>Rất nhanh</td>
+                    <td>Chuỗi</td>
+                    <td>⚠️ Lỗi thời</td>
+                </tr>
+                <tr>
+                    <td>DES</td>
+                    <td>Đối xứng</td>
+                    <td>Thấp</td>
+                    <td>Nhanh</td>
+                    <td>56-bit</td>
+                    <td>⚠️ Không khuyến nghị</td>
+                </tr>
+                <tr>
+                    <td>3DES</td>
+                    <td>Đối xứng</td>
+                    <td>Trung bình</td>
+                    <td>Chậm</td>
+                    <td>168-bit</td>
+                    <td>⚠️ Dần lỗi thời</td>
+                </tr>
+                <tr>
+                    <td>AES</td>
+                    <td>Đối xứng</td>
+                    <td>Rất cao</td>
+                    <td>Rất nhanh</td>
+                    <td>128/192/256-bit</td>
+                    <td>✓ Khuyến nghị</td>
+                </tr>
+                <tr>
+                    <td>RSA</td>
+                    <td>Bất đối xứng</td>
+                    <td>Cao</td>
+                    <td>Chậm</td>
+                    <td>2048+bit</td>
+                    <td>✓ Sử dụng rộng rãi</td>
+                </tr>
+                <tr>
+                    <td>ECC</td>
+                    <td>Bất đối xứng</td>
+                    <td>Cao</td>
+                    <td>Nhanh hơn RSA</td>
+                    <td>256-bit</td>
+                    <td>✓ Ngày càng phổ biến</td>
+                </tr>
+                <tr>
+                    <td>SHA-256</td>
+                    <td>Hash</td>
+                    <td>Rất cao</td>
+                    <td>Rất nhanh</td>
+                    <td>N/A</td>
+                    <td>✓ Khuyến nghị</td>
+                </tr>
+                <tr>
+                    <td>BCRYPT</td>
+                    <td>Hash</td>
+                    <td>Rất cao</td>
+                    <td>Chậm (ý định)</td>
+                    <td>N/A</td>
+                    <td>✓ Khuyến nghị</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- LỜI KHUYÊN THỰC TIỄN -->
+        <section class="theory-section">
+            <h2>Lời Khuyên Thực Tiễn</h2>
+            <div class="advice" style="background-color: #e8f5e9; padding: 15px; border-left: 4px solid #4caf50; margin: 10px 0;">
+                <h4>✓ NÊN LÀM:</h4>
+                <ul>
+                    <li>Sử dụng <strong>AES-256</strong> cho mã hóa dữ liệu nhạy cảm</li>
+                    <li>Sử dụng <strong>SHA-256</strong> hoặc cao hơn cho hash</li>
+                    <li>Sử dụng <strong>BCRYPT</strong> hoặc SCRYPT cho lưu trữ mật khẩu</li>
+                    <li>Sử dụng <strong>RSA-2048</strong> hoặc <strong>ECC-256</strong> cho mã hóa công khai</li>
+                    <li>Luôn thêm <strong>salt</strong> khi hash mật khẩu</li>
+                    <li>Sử dụng <strong>HTTPS</strong> (TLS/SSL) cho truyền tải dữ liệu</li>
+                </ul>
+            </div>
+            <div class="advice" style="background-color: #ffebee; padding: 15px; border-left: 4px solid #f44336; margin: 10px 0;">
+                <h4>✗ KHÔNG NÊN LÀM:</h4>
+                <ul>
+                    <li>❌ Không sử dụng DES, SHA-1, MD5 cho bảo mật</li>
+                    <li>❌ Không hash mật khẩu bằng MD5 hoặc SHA-1 đơn thuần</li>
+                    <li>❌ Không tạo ra thuật toán mã hóa của riêng bạn</li>
+                    <li>❌ Không lưu mật khẩu dưới dạng plaintext</li>
+                    <li>❌ Không sử dụng khóa yếu hoặc khóa mặc định</li>
+                    <li>❌ Không tin tưởng vào "security through obscurity"</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

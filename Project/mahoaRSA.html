@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuật toán RSA</title>
+    <link rel="stylesheet" href="mahoaRSA.css">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.0/jsencrypt.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef } = React;
+
+        const RSACipher = () => {
+          const [inputText, setInputText] = useState('');
+          const [publicKey, setPublicKey] = useState('');
+          const [privateKey, setPrivateKey] = useState('');
+          const [outputText, setOutputText] = useState('');
+          const [decryptedText, setDecryptedText] = useState('');
+          const [keySize, setKeySize] = useState(2048);
+          const [isGenerating, setIsGenerating] = useState(false);
+
+          const generateKeys = () => {
+            setIsGenerating(true);
+            const crypt = new JSEncrypt({ default_key_size: keySize });
+            const pubKey = crypt.getPublicKey();
+            const privKey = crypt.getPrivateKey();
+            
+            setPublicKey(pubKey.toString());
+            setPrivateKey(privKey.toString());
+            setIsGenerating(false);
+          };
+
+          const handleEncrypt = () => {
+            if (!publicKey) {
+              alert('Vui lòng tạo cặp khóa trước!');
+              return;
+            }
+            try {
+              const crypt = new JSEncrypt();
+              crypt.setPublicKey(publicKey);
+              const encrypted = crypt.encrypt(inputText);
+              if (encrypted) {
+                setOutputText(encrypted);
+              } else {
+                alert('Mã hóa thất bại! Văn bản có thể quá dài cho khóa này.');
+              }
+            } catch (error) {
+              alert('Lỗi mã hóa: ' + error.message);
+            }
+          };
+
+          const handleDecrypt = () => {
+            if (!privateKey) {
+              alert('Vui lòng tạo cặp khóa trước!');
+              return;
+            }
+            try {
+              const crypt = new JSEncrypt();
+              crypt.setPrivateKey(privateKey);
+              const decrypted = crypt.decrypt(inputText);
+              if (decrypted) {
+                setDecryptedText(decrypted);
+              } else {
+                setDecryptedText('Giải mã thất bại - khóa không chính xác hoặc dữ liệu bị hỏng');
+              }
+            } catch (error) {
+              setDecryptedText('Giải mã thất bại: ' + error.message);
+            }
+          };
+
+          const downloadFile = (content, filename) => {
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+          };
+
+          const downloadPublicKey = () => {
+            if (publicKey) {
+              downloadFile(publicKey, 'public_key.pem');
+            }
+          };
+
+          const downloadPrivateKey = () => {
+            if (privateKey) {
+              downloadFile(privateKey, 'private_key.pem');
+            }
+          };
+
+          const copyToClipboard = (text) => {
+            navigator.clipboard.writeText(text);
+            alert('Đã sao chép vào bộ nhớ đệm!');
+          };
+
+          return (
+            <div className="container">
+              <div className="card">
+                <h2 className="card-title">Công cụ mã hóa RSA (Rivest-Shamir-Adleman)</h2>
+                <p className="card-description">RSA là thuật toán mã hóa khóa công khai (Asymmetric) dựa trên bài toán phân tích thừa số nguyên tố</p>
+                
+                <div className="form-group">
+                  <div className="input-row">
+                    <label className="input-label">Kích thước khóa (bits)</label>
+                    <select 
+                      className="input-field"
+                      value={keySize}
+                      onChange={(e) => setKeySize(Number(e.target.value))}
+                      disabled={isGenerating}
+                    >
+                      <option value={1024}>1024 bits</option>
+                      <option value={2048}>2048 bits (Khuyến nghị)</option>
+                      <option value={4096}>4096 bits (Bảo mật cao)</option>
+                    </select>
+                  </div>
+
+                  <div className="button-group">
+                    <button 
+                      onClick={generateKeys}
+                      disabled={isGenerating}
+                      className="button button-green"
+                    >
+                      {isGenerating ? 'Đang tạo khóa...' : 'Tạo Cặp Khóa RSA'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card">
+                <h2 className="card-title">Quản lý Khóa</h2>
+                
+                <div className="form-group">
+                  <div className="input-row">
+                    <label className="input-label">Khóa Công Khai (Public Key)</label>
+                    <textarea
+                      className="input-field bg-gray-200" 
+                      value={publicKey} 
+                      readOnly 
+                      rows="4"
+                    />
+                  </div>
+
+                  <div className="button-group">
+                    <button 
+                      onClick={downloadPublicKey}
+                      disabled={!publicKey}
+                      className="button button-orange"
+                    >
+                      Tải Khóa Công Khai
+                    </button>
+                    <button 
+                      onClick={() => copyToClipboard(publicKey)}
+                      disabled={!publicKey}
+                      className="button button-purple"
+                    >
+                      Sao Chép Khóa Công Khai
+                    </button>
+                  </div>
+
+                  <div className="input-row">
+                    <label className="input-label">Khóa Riêng Tư (Private Key)</label>
+                    <textarea
+                      className="input-field bg-gray-200" 
+                      value={privateKey} 
+                      readOnly 
+                      rows="4"
+                    />
+                  </div>
+
+                  <div className="button-group">
+                    <button 
+                      onClick={downloadPrivateKey}
+                      disabled={!privateKey}
+                      className="button button-orange"
+                    >
+                      Tải Khóa Riêng Tư
+                    </button>
+                    <button 
+                      onClick={() => copyToClipboard(privateKey)}
+                      disabled={!privateKey}
+                      className="button button-purple"
+                    >
+                      Sao Chép Khóa Riêng Tư
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card">
+                <h2 className="card-title">Mã hóa / Giải mã Văn bản</h2>
+                
+                <div className="form-group">
+                  <div className="input-row">
+                    <label className="input-label">Văn bản cần xử lý</label>
+                    <input 
+                      className="input-field"
+                      value={inputText}
+                      onChange={(e) => setInputText(e.target.value)}
+                      placeholder="Nhập văn bản cần mã hóa hoặc giải mã..."
+                    />
+                  </div>
+
+                  <div className="input-row">
+                    <label className="input-label text-blue-600">Văn bản sau giải mã</label>
+                    <input 
+                      className="input-field bg-gray-200" 
+                      value={decryptedText} 
+                      readOnly 
+                    />
+                  </div>
+
+                  <div className="input-row">
+                    <label className="input-label text-red-600">Văn bản mã hóa</label>
+                    <textarea
+                      className="input-field bg-gray-200" 
+                      value={outputText} 
+                      readOnly 
+                      rows="3"
+                    />
+                  </div>
+                </div>
+
+                <div className="button-group">
+                  <button 
+                    onClick={handleEncrypt}
+                    disabled={!publicKey}
+                    className="button button-green"
+                  >
+                    Mã Hóa (Khóa Công Khai)
+                  </button>
+                  <button 
+                    onClick={handleDecrypt}
+                    disabled={!privateKey}
+                    className="button button-blue"
+                  >
+                    Giải Mã (Khóa Riêng Tư)
+                  </button>
+                </div>
+              </div>
+
+              <div className="card">
+                <h2 className="card-title">Thông tin về RSA</h2>
+                <p>📌 <strong>Đặc điểm chính:</strong></p>
+                <ul>
+                  <li>Sử dụng cặp khóa: khóa công khai (mã hóa) và khóa riêng tư (giải mã)</li>
+                  <li>Dựa trên độ khó của bài toán phân tích thừa số của số lớn</li>
+                  <li>Kích thước khóa thường là 2048 bits hoặc 4096 bits để đảm bảo bảo mật</li>
+                  <li>Chậm hơn mã hóa đối xứng (như AES), nên thường chỉ dùng cho khóa nhỏ</li>
+                </ul>
+              </div>
+            </div>
+          );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<RSACipher />);
+    </script>
+</body>
+</html>

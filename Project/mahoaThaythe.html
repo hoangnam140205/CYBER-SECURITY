@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mã Hóa Thay thế</title>
+    <link rel="stylesheet" href="mahoaThaythe.css">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+
+        const SubstitutionCipher = () => {
+          const [inputText, setInputText] = useState('');
+          const [key, setKey] = useState('3');
+          const [outputText, setOutputText] = useState('');
+          const [decryptedText, setDecryptedText] = useState('');
+          const [fileContent, setFileContent] = useState('');
+          const [fileName, setFileName] = useState('');
+          const fileInputRef = useRef(null);
+
+          // Sinh key ngẫu nhiên khi component load
+          useEffect(() => {
+            const randomKey = Math.floor(Math.random() * 25) + 1;
+            setKey(randomKey.toString());
+          }, []);
+
+          const generateRandomKey = () => {
+            const randomKey = Math.floor(Math.random() * 25) + 1;
+            setKey(randomKey.toString());
+          };
+
+          const logicCipher = (text, shiftKey) => {
+            const keyNum = parseInt(shiftKey) || 0;
+            return text.replace(/[a-z]/gi, (char) => {
+              const start = char <= 'Z' ? 65 : 97;
+              const x = char.charCodeAt(0) - start;
+              const encrypted = (x + keyNum) % 26;
+              return String.fromCharCode(encrypted + start);
+            });
+          };
+
+          const handleEncrypt = () => {
+            const result = logicCipher(inputText, parseInt(key) || 0);
+            setOutputText(result);
+          };
+
+          const handleDecrypt = () => {
+            const result = logicCipher(inputText, -(parseInt(key) || 0));
+            setDecryptedText(result);
+          };
+
+          // Xử lý nhập file từ máy tính
+          const handleFileUpload = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              setFileName(file.name);
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                setFileContent(event.target.result);
+              };
+              reader.readAsText(file);
+            }
+          };
+
+          // Mã hóa nội dung file
+          const handleEncryptFile = () => {
+            if (fileContent) {
+              const encrypted = logicCipher(fileContent, parseInt(key) || 0);
+              downloadFile(encrypted, 'encrypted_' + fileName);
+            }
+          };
+
+          // Giải mã nội dung file
+          const handleDecryptFile = () => {
+            if (fileContent) {
+              const decrypted = logicCipher(fileContent, -(parseInt(key) || 0));
+              downloadFile(decrypted, 'decrypted_' + fileName);
+            }
+          };
+
+          // Tải file xuống
+          const downloadFile = (content, filename) => {
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+          };
+
+          // Download output text
+          const downloadOutputText = () => {
+            if (outputText) {
+              downloadFile(outputText, 'output_encrypted.txt');
+            }
+          };
+
+          // Download decrypted text
+          const downloadDecryptedText = () => {
+            if (decryptedText) {
+              downloadFile(decryptedText, 'output_decrypted.txt');
+            }
+          };
+
+          return (
+            <div className="container">
+              <div className="card">
+                <h2 className="card-title">Công cụ mã hóa Thay thế</h2>
+                
+                <div className="form-group">
+                  <div className="input-row with-button">
+                    <label className="input-label">Key (Shift)</label>
+                    <input
+                      className="input-field"
+                      value={key}
+                      onChange={(e) => setKey(e.target.value)}
+                      placeholder="Key tự động..."
+                    />
+                    <button 
+                      onClick={generateRandomKey}
+                      className="button button-purple"
+                    >
+                      Generate
+                    </button>
+                  </div>
+
+                  <div className="input-row">
+                    <label className="input-label">Input Text</label>
+                    <input 
+                      className="input-field"
+                      value={inputText}
+                      onChange={(e) => setInputText(e.target.value)}
+                      placeholder="Enter text..."
+                    />
+                  </div>
+
+                  <div className="input-row">
+                    <label className="input-label text-blue-600">Decrypted Text</label>
+                    <input 
+                      className="input-field bg-gray-200" 
+                      value={decryptedText} 
+                      readOnly 
+                    />
+                  </div>
+
+                  <div className="input-row">
+                    <label className="input-label text-red-600">Output Text</label>
+                    <input 
+                      className="input-field bg-gray-200" 
+                      value={outputText} 
+                      readOnly 
+                    />
+                  </div>
+                </div>
+
+                <div className="button-group">
+                  <button 
+                    onClick={handleEncrypt}
+                    className="button button-green"
+                  >
+                    Encrypt
+                  </button>
+                  <button 
+                    onClick={handleDecrypt}
+                    className="button button-blue"
+                  >
+                    Decrypt
+                  </button>
+                </div>
+              </div>
+
+              <div className="card">
+                <h2 className="card-title">Mã hóa File</h2>
+                
+                <div className="form-group">
+                  <div className="file-input-group">
+                    <label className="input-label">Chọn file:</label>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".txt"
+                      className="file-input"
+                      onChange={handleFileUpload}
+                    />
+                  </div>
+
+                  {fileName && (
+                    <div className="input-row">
+                      <label className="input-label">File:</label>
+                      <input 
+                        className="input-field bg-gray-200"
+                        value={fileName}
+                        readOnly
+                      />
+                    </div>
+                  )}
+
+                  {fileContent && (
+                    <div className="preview-box">
+                      <p className="preview-title">Preview (100 ký tự đầu tiên):</p>
+                      <p className="preview-text">{fileContent.substring(0, 100)}...</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="button-group">
+                  <button 
+                    onClick={handleEncryptFile}
+                    disabled={!fileContent}
+                    className="button button-green"
+                  >
+                    Mã hóa & Tải xuống
+                  </button>
+                  <button 
+                    onClick={handleDecryptFile}
+                    disabled={!fileContent}
+                    className="button button-blue"
+                  >
+                    Giải mã & Tải xuống
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SubstitutionCipher />);
+    </script>
+</body>
+</html>

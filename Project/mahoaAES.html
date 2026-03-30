@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mã Hóa AES / DES</title>
+    <link rel="stylesheet" href="mahoaAES.css">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef } = React;
+
+        const AESCipher = () => {
+          const [inputText, setInputText] = useState('');
+          const [passphrase, setPassphrase] = useState('secretkey123');
+          const [outputText, setOutputText] = useState('');
+          const [decryptedText, setDecryptedText] = useState('');
+          const [fileContent, setFileContent] = useState('');
+          const [fileName, setFileName] = useState('');
+          const fileInputRef = useRef(null);
+
+          const handleEncrypt = () => {
+            try {
+              const encrypted = CryptoJS.AES.encrypt(inputText, passphrase).toString();
+              setOutputText(encrypted);
+            } catch (error) {
+              alert('Lỗi mã hóa: ' + error.message);
+            }
+          };
+
+          const handleDecrypt = () => {
+            try {
+              const decrypted = CryptoJS.AES.decrypt(inputText, passphrase).toString(CryptoJS.enc.Utf8);
+              setDecryptedText(decrypted || 'Giải mã thất bại - khóa không chính xác');
+            } catch (error) {
+              setDecryptedText('Giải mã thất bại - khóa không chính xác');
+            }
+          };
+
+          // Xử lý nhập file từ máy tính
+          const handleFileUpload = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              setFileName(file.name);
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                setFileContent(event.target.result);
+              };
+              reader.readAsText(file);
+            }
+          };
+
+          // Mã hóa nội dung file
+          const handleEncryptFile = () => {
+            if (fileContent) {
+              try {
+                const encrypted = CryptoJS.AES.encrypt(fileContent, passphrase).toString();
+                downloadFile(encrypted, 'encrypted_' + fileName);
+              } catch (error) {
+                alert('Lỗi mã hóa file: ' + error.message);
+              }
+            }
+          };
+
+          // Giải mã nội dung file
+          const handleDecryptFile = () => {
+            if (fileContent) {
+              try {
+                const decrypted = CryptoJS.AES.decrypt(fileContent, passphrase).toString(CryptoJS.enc.Utf8);
+                downloadFile(decrypted || 'Giải mã thất bại', 'decrypted_' + fileName);
+              } catch (error) {
+                alert('Lỗi giải mã file: ' + error.message);
+              }
+            }
+          };
+
+          // Tải file xuống
+          const downloadFile = (content, filename) => {
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+          };
+
+          // Download output text
+          const downloadOutputText = () => {
+            if (outputText) {
+              downloadFile(outputText, 'output_encrypted_aes.txt');
+            }
+          };
+
+          // Download decrypted text
+          const downloadDecryptedText = () => {
+            if (decryptedText) {
+              downloadFile(decryptedText, 'output_decrypted_aes.txt');
+            }
+          };
+
+          return (
+            <div className="container">
+              <div className="card">
+                <h2 className="card-title">Công cụ mã hóa AES (Advanced Encryption Standard)</h2>
+                <p className="card-description">AES là tiêu chuẩn mã hóa khối hiện đại được sử dụng rộng rãi trong an toàn thông tin</p>
+                
+                <div className="form-group">
+                  <div className="input-row">
+                    <label className="input-label">Văn bản cần mã hóa</label>
+                    <input 
+                      className="input-field"
+                      value={inputText}
+                      onChange={(e) => setInputText(e.target.value)}
+                      placeholder="Nhập văn bản cần mã hóa..."
+                    />
+                  </div>
+
+                  <div className="input-row">
+                    <label className="input-label">Khóa bảo mật (Passphrase)</label>
+                    <input 
+                      type="password"
+                      className="input-field"
+                      value={passphrase}
+                      onChange={(e) => setPassphrase(e.target.value)}
+                      placeholder="Nhập khóa bảo mật..."
+                    />
+                  </div>
+
+                  <div className="input-row">
+                    <label className="input-label text-blue-600">Văn bản sau giải mã</label>
+                    <input 
+                      className="input-field bg-gray-200" 
+                      value={decryptedText} 
+                      readOnly 
+                    />
+                  </div>
+
+                  <div className="input-row">
+                    <label className="input-label text-red-600">Văn bản mã hóa</label>
+                    <textarea
+                      className="input-field bg-gray-200" 
+                      value={outputText} 
+                      readOnly 
+                      rows="4"
+                    />
+                  </div>
+                </div>
+
+                <div className="button-group">
+                  <button 
+                    onClick={handleEncrypt}
+                    className="button button-green"
+                  >
+                    Mã Hóa
+                  </button>
+                  <button 
+                    onClick={handleDecrypt}
+                    className="button button-blue"
+                  >
+                    Giải Mã
+                  </button>
+                  <button 
+                    onClick={downloadOutputText}
+                    disabled={!outputText}
+                    className="button button-orange"
+                  >
+                    Tải Văn Bản Mã Hóa
+                  </button>
+                </div>
+              </div>
+
+              <div className="card">
+                <h2 className="card-title">Mã hóa File</h2>
+                
+                <div className="form-group">
+                  <div className="file-input-group">
+                    <label className="input-label">Chọn file:</label>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".txt"
+                      className="file-input"
+                      onChange={handleFileUpload}
+                    />
+                  </div>
+
+                  {fileName && (
+                    <div className="input-row">
+                      <label className="input-label">File:</label>
+                      <input 
+                        className="input-field bg-gray-200"
+                        value={fileName}
+                        readOnly
+                      />
+                    </div>
+                  )}
+
+                  {fileContent && (
+                    <div className="preview-box">
+                      <p className="preview-title">Preview (100 ký tự đầu tiên):</p>
+                      <p className="preview-text">{fileContent.substring(0, 100)}...</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="button-group">
+                  <button 
+                    onClick={handleEncryptFile}
+                    disabled={!fileContent}
+                    className="button button-green"
+                  >
+                    Mã hóa & Tải xuống
+                  </button>
+                  <button 
+                    onClick={handleDecryptFile}
+                    disabled={!fileContent}
+                    className="button button-blue"
+                  >
+                    Giải mã & Tải xuống
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<AESCipher />);
+    </script>
+</body>
+</html>
